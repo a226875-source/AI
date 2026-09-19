@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>彰化社區大學 AI 課程學員介紹</title>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      font-family: "Noto Serif CJK TC", "Microsoft JhengHei", serif;
+      margin: 0;
+      background: #f5f7fa;
+      color: #2f3542;
+    }
+    header {
+      text-align: center;
+      padding: 36px 20px 28px;
+      background: #ffffff;
+      box-shadow: 0 2px 10px rgba(0,0,0,.07);
+    }
+    h1 { margin: 0 0 10px; font-size: clamp(26px, 4vw, 38px); }
+    header p { margin: 0; color: #667085; }
+    .summary {
+      max-width: 1200px;
+      margin: 24px auto 0;
+      padding: 0 20px;
+      color: #667085;
+      font-size: 15px;
+    }
+    .container {
+      max-width: 1200px;
+      margin: 18px auto 40px;
+      padding: 0 20px;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 20px;
+    }
+    .card {
+      background: #fff;
+      border-radius: 18px;
+      padding: 22px;
+      box-shadow: 0 5px 16px rgba(16,24,40,.08);
+      border-top: 5px solid #5c7cfa;
+      transition: transform .2s ease, box-shadow .2s ease;
+    }
+    .card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 9px 24px rgba(16,24,40,.12);
+    }
+    .topline {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-bottom: 12px;
+    }
+    .number, .tag {
+      display: inline-block;
+      border-radius: 999px;
+      padding: 5px 11px;
+      font-size: 14px;
+      font-weight: 700;
+    }
+    .number { background: #5c7cfa; color: #fff; }
+    .old { background: #e7f5ff; color: #1971c2; }
+    .new { background: #fff3bf; color: #e67700; }
+    .card h2 { margin: 4px 0 14px; font-size: 25px; }
+    .info { line-height: 1.9; }
+    .highlight {
+      margin-top: 15px;
+      padding: 13px 14px;
+      border-radius: 12px;
+      background: #f8f9fa;
+      line-height: 1.75;
+    }
+    footer {
+      text-align: center;
+      color: #98a2b3;
+      padding: 0 16px 32px;
+    }
+    @media (max-width: 600px) {
+      header { padding-top: 28px; }
+      .container { grid-template-columns: 1fr; padding: 0 14px; }
+      .summary { padding: 0 14px; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>彰化社區大學 AI 課程學員介紹</h1>
+    <p>用 AI 學習新知，也讓科技走進生活</p>
+  </header>
+
+  <div class="summary">依編號排列。姓名第 2 個字以「@」遮蔽。</div>
+  <main class="container" id="cards"></main>
+
+  <footer>彰化社區大學 AI 課程｜學員自我介紹</footer>
+
+  <script>
+    const students = [
+      {no:1,name:"王@珠",age:68,type:"舊學員",bg:"已上課很多期",note:"持續來社大學習AI。"},
+      {no:2,name:"林@慧",age:53,type:"舊學員",bg:"第2次上課",note:"上學期缺課較多，因此這學期再學一次。"},
+      {no:3,name:"許@榛",age:47,type:"舊學員",bg:"第3次上課",note:"希望學會AI並運用在工作上。"},
+      {no:4,name:"曾@美",age:64,type:"舊學員",bg:"第2次上課",note:"因有事已向老師請假一個月。"},
+      {no:5,name:"黃@庭",age:56,type:"舊學員",bg:"持續參加課程",note:"幽默表示週六下午來「湊人氣」，提升電腦學習力。"},
+      {no:6,name:"王@貞",age:52,type:"舊學員",bg:"第2次上課",note:"想過一個充實的週六下午。"},
+      {no:7,name:"黃@香",age:70,type:"舊學員",bg:"第3次來社大上課",note:"持續學習AI，希望運用在生活中。"},
+      {no:8,name:"林@華",age:70,type:"舊學員",bg:"假日來學新東西、交朋友",note:"想認識新東西，也想交年輕朋友。"},
+      {no:9,name:"鄭@彰",age:65,type:"舊學員",bg:"第2次上課",note:"想長知識、追上世界潮流。"},
+      {no:10,name:"楊@姝",age:67,type:"舊學員",bg:"喜歡課程上課氛圍",note:"繼續回來溫故知新。"},
+      {no:12,name:"林@雲",age:26,type:"舊學員",bg:"第2次上課",note:"覺得課程先進、老師細心，又有熱心姐姐幫忙。"},
+      {no:13,name:"林@儒",age:61,type:"新學員",bg:"第1次上課",note:"想增加自己的AI能力。"},
+      {no:15,name:"許@",age:69,type:"新學員",bg:"第1次上課，已有AI使用經驗",note:"已經會用，希望再深入學習。"},
+      {no:16,name:"粘@莉",age:63,type:"新學員",bg:"初次來社大上課",note:"希望把AI帶入日常生活。"},
+      {no:17,name:"莊@章",age:62,type:"新學員",bg:"第1次上課",note:"利用空檔時間學AI。"},
+      {no:18,name:"施@蓁",age:58,type:"新學員",bg:"第1次來社大上課",note:"因為想學習AI而來上課。"},
+      {no:19,name:"曾@銘",age:65,type:"新學員",bg:"第1次上課",note:"想深入了解AI有多難、多廣，也希望和同學交流。"},
+      {no:20,name:"廖@昭",age:75,type:"新學員",bg:"曾參加過2次AI課程",note:"重修是為了喚起學習記憶。"},
+      {no:21,name:"李@平",age:67,type:"新學員",bg:"退休後學習新知",note:"退休後想利用時間接觸新知識。"},
+      {no:22,name:"陸@蘭",age:37,type:"新學員",bg:"第1次上課",note:"希望認識AI並應用到生活。"},
+      {no:23,name:"林@鋐",age:19,type:"新學員",bg:"第1次上課",note:"怕媽媽自己來上課太無聊，所以陪媽媽一起來。"},
+      {no:24,name:"高@弘",age:50,type:"新學員",bg:"第1次上課",note:"週六下午在家無聊，所以來學習。"},
+      {no:25,name:"施@玲",age:62,type:"新學員",bg:"第1次上課",note:"利用週六下午培養新興趣。"},
+      {no:26,name:"孫@雲",age:67,type:"新學員",bg:"第1次上AI課",note:"羨慕別人用AI做圖片、影片，希望自己也學會。"},
+      {no:27,name:"葉@美",age:70,type:"新學員",bg:"第1次學AI",note:"想知道如何把AI應用到生活。"}
+    ];
+
+    const cards = document.getElementById("cards");
+    students.forEach(s => {
+      const card = document.createElement("article");
+      card.className = "card";
+      card.innerHTML = `
+        <div class="topline">
+          <span class="number">${s.no}號</span>
+          <span class="tag ${s.type === "舊學員" ? "old" : "new"}">${s.type}</span>
+        </div>
+        <h2>${s.name}</h2>
+        <div class="info">
+          <strong>年齡：</strong>${s.age}<br>
+          <strong>背景：</strong>${s.bg}
+        </div>
+        <div class="highlight"><strong>印象深刻：</strong>${s.note}</div>
+      `;
+      cards.appendChild(card);
+    });
+  </script>
+</body>
+</html>
