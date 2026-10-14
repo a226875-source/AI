@@ -364,7 +364,7 @@
 
 
     <!-- ==================== 檔案列表 ==================== -->
-    <div id="fileList" class="file-list"><div class="file-item"><div class="file-left"><span class="file-icon">🖼️</span><span class="file-name">1151003哪吒圖片.jpg</span></div><div class="file-actions"><a class="open-link" href="https://a226875-source.github.io/AI/1151003哪吒圖片.jpg" target="_blank" rel="noopener noreferrer">🔗 開啟</a><button type="button" class="btn-copy">📋 複製超連結</button></div></div><div class="file-item"><div class="file-left"><span class="file-icon">🌐</span><span class="file-name">20260919-01.html</span></div><div class="file-actions"><a class="open-link" href="https://a226875-source.github.io/AI/20260919-01.html" target="_blank" rel="noopener noreferrer">🔗 開啟</a><button type="button" class="btn-copy">📋 複製超連結</button></div></div><div class="file-item"><div class="file-left"><span class="file-icon">🌐</span><span class="file-name">index.html</span></div><div class="file-actions"><a class="open-link" href="https://a226875-source.github.io/AI/index.html" target="_blank" rel="noopener noreferrer">🔗 開啟</a><button type="button" class="btn-copy">📋 複製超連結</button></div></div></div>
+    <div id="fileList" class="file-list"><div class="message">⏳ 正在讀取 GitHub 最新檔案...</div></div>
 
 </div>
 
@@ -1471,6 +1471,9 @@ document.addEventListener(
             lockDownloadState();
 
         }
+
+        // 每次開啟網站，自動從 GitHub 取得目前最新的檔案清單。
+        startLoad();
 
     }
 );
