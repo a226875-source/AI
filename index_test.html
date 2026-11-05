@@ -4,7 +4,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>秋香的圖片瀏覽測試</title>
+<title>秋香的圖片清單</title>
 <style>
 body {
   font-family: Arial, sans-serif;
@@ -12,61 +12,45 @@ body {
   padding: 20px;
 }
 h1 { color: #914d86; }
-button {
-  font-size: 20px;
-  padding: 12px 20px;
-  margin: 6px;
-  cursor: pointer;
-}
-#photos {
-  margin-top: 20px;
-}
-.grid {
-  display: grid;
-  grid-template-columns:
-    repeat(auto-fill, minmax(170px, 1fr));
-  gap: 16px;
-}
-.list {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-}
-.photo {
-  background: white;
-  padding: 10px;
-  border-radius: 10px;
-  overflow-wrap: anywhere;
-}
-.photo img {
-  width: 100%;
-  height: 140px;
-  object-fit: contain;
-}
-.list .photo {
+.item {
   display: flex;
   align-items: center;
   gap: 15px;
+  padding: 12px;
+  background: white;
+  border-radius: 10px;
+  margin-bottom: 10px;
+  flex-wrap: wrap;
 }
-.list .photo img {
+.item img {
   width: 90px;
-  height: 70px;
+  height: 75px;
+  object-fit: contain;
 }
+.name {
+  flex: 1;
+  min-width: 150px;
+  overflow-wrap: anywhere;
+}
+.actions {
+  display: flex;
+  gap: 8px;
+}
+button {
+  border: none;
+  border-radius: 6px;
+  padding: 10px 14px;
+  color: white;
+  cursor: pointer;
+  font-size: 16px;
+}
+.open { background: #12638a; }
+.copy { background: #683679; }
 </style>
 </head>
 <body>
-
-<h1>🌷 秋香的圖片瀏覽測試</h1>
-<button onclick="changeMode('grid')">
-  🖼️ 縮圖模式
-</button>
-<button onclick="changeMode('list')">
-  ☰ 清單模式
-</button>
-
-<div id="photos" class="grid">
-  正在讀取圖片……
-</div>
+<h1>🌷 秋香的圖片清單</h1>
+<div id="photos">正在讀取圖片……</div>
 
 <script>
 const owner = "a226875-source";
@@ -82,7 +66,7 @@ async function loadPhotos() {
 
     const response = await fetch(url);
     if (!response.ok) {
-      throw new Error("無法讀取圖片資料夾");
+      throw new Error("讀取失敗");
     }
 
     const files = await response.json();
@@ -99,31 +83,55 @@ async function loadPhotos() {
 
     images.forEach(file => {
       const item = document.createElement("div");
-      item.className = "photo";
+      item.className = "item";
 
       const img = document.createElement("img");
       img.src = file.download_url;
       img.alt = file.name;
       img.loading = "lazy";
 
-      const name = document.createElement("p");
+      const name = document.createElement("span");
+      name.className = "name";
       name.textContent = file.name;
 
-      item.append(img, name);
+      const actions = document.createElement("div");
+      actions.className = "actions";
+
+      const open = document.createElement("button");
+      open.className = "open";
+      open.textContent = "開啟";
+      open.onclick = () => {
+        window.open(file.download_url, "_blank");
+      };
+
+      const copy = document.createElement("button");
+      copy.className = "copy";
+      copy.textContent = "複製連結";
+      copy.onclick = async () => {
+        try {
+          await navigator.clipboard.writeText(
+            file.download_url
+          );
+          copy.textContent = "已複製！";
+          setTimeout(() => {
+            copy.textContent = "複製連結";
+          }, 2000);
+        } catch (error) {
+          alert("複製失敗，請再試一次");
+        }
+      };
+
+      actions.append(open, copy);
+      item.append(img, name, actions);
       photos.appendChild(item);
     });
   } catch (error) {
     photos.textContent =
-      "圖片讀取失敗，請確認資料夾名稱及網路連線。";
+      "圖片讀取失敗，請確認網路連線。";
   }
-}
-
-function changeMode(mode) {
-  photos.className = mode;
 }
 
 loadPhotos();
 </script>
 </body>
 </html>
-
