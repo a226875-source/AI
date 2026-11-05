@@ -1,1 +1,129 @@
-這是我的測試網頁
+
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>秋香的圖片瀏覽測試</title>
+<style>
+body {
+  font-family: Arial, sans-serif;
+  background: #fff8ed;
+  padding: 20px;
+}
+h1 { color: #914d86; }
+button {
+  font-size: 20px;
+  padding: 12px 20px;
+  margin: 6px;
+  cursor: pointer;
+}
+#photos {
+  margin-top: 20px;
+}
+.grid {
+  display: grid;
+  grid-template-columns:
+    repeat(auto-fill, minmax(170px, 1fr));
+  gap: 16px;
+}
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.photo {
+  background: white;
+  padding: 10px;
+  border-radius: 10px;
+  overflow-wrap: anywhere;
+}
+.photo img {
+  width: 100%;
+  height: 140px;
+  object-fit: contain;
+}
+.list .photo {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+.list .photo img {
+  width: 90px;
+  height: 70px;
+}
+</style>
+</head>
+<body>
+
+<h1>🌷 秋香的圖片瀏覽測試</h1>
+<button onclick="changeMode('grid')">
+  🖼️ 縮圖模式
+</button>
+<button onclick="changeMode('list')">
+  ☰ 清單模式
+</button>
+
+<div id="photos" class="grid">
+  正在讀取圖片……
+</div>
+
+<script>
+const owner = "a226875-source";
+const repo = "AI";
+const folder = "01.AI生成圖片";
+const photos = document.getElementById("photos");
+
+async function loadPhotos() {
+  try {
+    const url = "https://api.github.com/repos/"
+      + owner + "/" + repo + "/contents/"
+      + encodeURIComponent(folder);
+
+    const response = await fetch(url);
+    if (!response.ok) {
+      throw new Error("無法讀取圖片資料夾");
+    }
+
+    const files = await response.json();
+    const images = files.filter(file =>
+      /\.(jpg|jpeg|png|gif|webp)$/i.test(file.name)
+    );
+
+    photos.innerHTML = "";
+
+    if (images.length === 0) {
+      photos.textContent = "目前沒有圖片";
+      return;
+    }
+
+    images.forEach(file => {
+      const item = document.createElement("div");
+      item.className = "photo";
+
+      const img = document.createElement("img");
+      img.src = file.download_url;
+      img.alt = file.name;
+      img.loading = "lazy";
+
+      const name = document.createElement("p");
+      name.textContent = file.name;
+
+      item.append(img, name);
+      photos.appendChild(item);
+    });
+  } catch (error) {
+    photos.textContent =
+      "圖片讀取失敗，請確認資料夾名稱及網路連線。";
+  }
+}
+
+function changeMode(mode) {
+  photos.className = mode;
+}
+
+loadPhotos();
+</script>
+</body>
+</html>
+
