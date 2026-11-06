@@ -664,10 +664,16 @@ function showFiles(data) {
     });
 
 
+    // 圖片依照目前清單排序，自動從 1 開始編號。
+    let imageNumber = 0;
     data.forEach(function(item) {
-
-        showItem(item);
-
+        const isImage = item.type === "file" && /\.(jpg|jpeg|png|gif|webp)$/i.test(item.name);
+        if (currentPath === "01.AI生成圖片" && isImage) {
+            imageNumber += 1;
+            showItem(item, imageNumber);
+        } else {
+            showItem(item);
+        }
     });
 
 }
@@ -677,7 +683,7 @@ function showFiles(data) {
    顯示單一項目
 ========================================================= */
 
-function showItem(item) {
+function showItem(item, imageNumber = null) {
 
     const fileList =
         document.getElementById("fileList");
@@ -748,6 +754,14 @@ function showItem(item) {
 }
   
 
+    if (imageNumber !== null) {
+        const number = document.createElement("span");
+        number.textContent = imageNumber + ". ";
+        number.style.fontWeight = "bold";
+        number.style.marginRight = "8px";
+        number.style.whiteSpace = "nowrap";
+        left.insertBefore(number, left.firstChild);
+    }
     left.appendChild(name);
 
 
