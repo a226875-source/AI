@@ -1113,11 +1113,12 @@ function getIcon(filename) {
     }
 
 
-    if (ext === "pdf") {
-
-        return "📕";
-
-    }
+   if (ext === "pdf") {
+  if (filename.includes("教學日誌")) {
+    return "📗";
+  }
+  return "📕";
+}
 
 
     if (
