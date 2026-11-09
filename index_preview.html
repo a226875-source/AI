@@ -788,7 +788,7 @@ function showItem(item, imageNumber = null) {
 
         openLink.className = "open-link";
 
-        openLink.href = pageURL;
+        openLink.href = item.path.toLowerCase().endsWith(".srt") ? "https://github.com/a226875-source/AI/blob/main/" + item.path.split("/").map(encodeURIComponent).join("/") : pageURL;
 
         openLink.target = "_blank";
 
