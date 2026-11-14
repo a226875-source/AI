@@ -1,0 +1,748 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>棋樂融融：跨齡跳棋心智派對 | 彰化社區大學課程規劃</title>
+  <!-- 載入 Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- 載入 Google Fonts: Noto Sans TC 與 Inter -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Noto+Sans+TC:wght@400;500;700;900&display=swap" rel="stylesheet">
+  
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['"Noto Sans TC"', 'Inter', 'sans-serif'],
+          },
+          colors: {
+            checker: {
+              red: '#EF4444',
+              orange: '#F97316',
+              yellow: '#EAB308',
+              green: '#10B981',
+              blue: '#3B82F6',
+              purple: '#8B5CF6',
+              cream: '#FFFBF5',
+              warm: '#FEF3C7',
+              ink: '#1E293B'
+            }
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    /* 基礎無障礙與字體縮放設定 */
+    html {
+      font-size: 16px;
+      scroll-behavior: smooth;
+    }
+    html.font-large {
+      font-size: 19px; /* 放大模式，照顧高齡學員閱讀 */
+    }
+    body {
+      background-color: #FFFBF5;
+      color: #1E293B;
+      background-image: radial-gradient(#FDE68A 1px, transparent 1px);
+      background-size: 28px 28px;
+    }
+
+    /* 列印專用樣式：隱藏控制按鈕並優化排版 */
+    @media print {
+      .no-print {
+        display: none !important;
+      }
+      body {
+        background: #FFFFFF !important;
+        color: #000000 !important;
+      }
+      .print-break-inside {
+        break-inside: avoid;
+      }
+      .shadow-lg, .shadow-md, .shadow-xl {
+        box-shadow: none !important;
+        border: 1px solid #CBD5E1 !important;
+      }
+    }
+  </style>
+</head>
+<body class="antialiased selection:bg-amber-200 selection:text-amber-900">
+
+  <!-- 頂部懸浮無障礙與操作工具列 -->
+  <nav class="no-print sticky top-0 z-50 bg-white/95 backdrop-blur-md border-b border-amber-200/80 shadow-sm">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 py-3 flex flex-wrap items-center justify-between gap-3">
+      <!-- 品牌識別 -->
+      <div class="flex items-center gap-2.5">
+        <div class="flex -space-x-1.5">
+          <span class="w-4 h-4 rounded-full bg-checker-red border-2 border-white shadow-xs"></span>
+          <span class="w-4 h-4 rounded-full bg-checker-yellow border-2 border-white shadow-xs"></span>
+          <span class="w-4 h-4 rounded-full bg-checker-green border-2 border-white shadow-xs"></span>
+          <span class="w-4 h-4 rounded-full bg-checker-blue border-2 border-white shadow-xs"></span>
+        </div>
+        <span class="font-bold text-slate-800 text-sm sm:text-base tracking-wide">彰化社區大學｜特色課程規劃</span>
+      </div>
+
+      <!-- 互動功能按鈕區 -->
+      <div class="flex items-center gap-2 sm:gap-3">
+        <!-- 字體大小切換 -->
+        <button id="fontToggleBtn" type="button" aria-label="切換字體大小"
+          class="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl bg-amber-100 hover:bg-amber-200 text-amber-950 font-bold text-sm transition-all cursor-pointer border border-amber-300 shadow-xs active:scale-95">
+          <svg class="w-4 h-4 text-amber-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" d="M4 6h16M4 12h10m-10 6h6m10-3l-3-3m0 0l-3 3m3-3v8"/>
+          </svg>
+          <span id="fontToggleLabel">字體：標準（點此放大）</span>
+        </button>
+
+        <!-- 列印 / 匯出 PDF -->
+        <button id="printBtn" type="button"
+          class="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-white font-bold text-sm transition-all cursor-pointer shadow-xs active:scale-95">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"/>
+          </svg>
+          <span>列印 / 匯出 PDF</span>
+        </button>
+      </div>
+    </div>
+  </nav>
+
+  <!-- 頂部橫幅 Header -->
+  <header class="relative overflow-hidden bg-gradient-to-br from-amber-500 via-orange-500 to-rose-500 text-white shadow-lg">
+    <!-- 裝飾性六角星跳棋盤背景 SVG -->
+    <div class="absolute inset-0 opacity-15 pointer-events-none flex items-center justify-end pr-4 sm:pr-12">
+      <svg class="w-80 h-80 sm:w-[460px] sm:h-[460px]" viewBox="0 0 200 200" fill="none">
+        <polygon points="100,10 125,55 175,55 150,100 175,145 125,145 100,190 75,145 25,145 50,100 25,55 75,55" stroke="white" stroke-width="3" fill="none"/>
+        <circle cx="100" cy="100" r="42" stroke="white" stroke-width="2" stroke-dasharray="6 6"/>
+        <circle cx="100" cy="24" r="6" fill="white"/>
+        <circle cx="164" cy="62" r="6" fill="white"/>
+        <circle cx="164" cy="138" r="6" fill="white"/>
+        <circle cx="100" cy="176" r="6" fill="white"/>
+        <circle cx="36" cy="138" r="6" fill="white"/>
+        <circle cx="36" cy="62" r="6" fill="white"/>
+      </svg>
+    </div>
+
+    <div class="relative max-w-6xl mx-auto px-4 sm:px-6 py-12 sm:py-16">
+      <!-- 徽章標籤群 -->
+      <div class="flex flex-wrap items-center gap-2.5 mb-5">
+        <span class="inline-flex items-center gap-1.5 px-3.5 py-1 rounded-full bg-white/20 backdrop-blur-xs text-white font-bold text-sm border border-white/30">
+          🏛️ 彰化社區大學 18週跨世代特色課程規劃
+        </span>
+        <span class="inline-flex items-center gap-1.5 px-3.5 py-1 rounded-full bg-amber-950/30 text-amber-50 font-semibold text-sm">
+          🤝 20–80歲 青銀共融
+        </span>
+        <span class="inline-flex items-center gap-1.5 px-3.5 py-1 rounded-full bg-amber-950/30 text-amber-50 font-semibold text-sm">
+          💛 社會情緒學習 (SEL) × 📱 資訊素養
+        </span>
+      </div>
+
+      <!-- 主標題與副標題 -->
+      <h1 class="text-3xl sm:text-5xl font-black tracking-tight leading-tight mb-4 drop-shadow-xs">
+        棋樂融融：跨齡跳棋心智派對
+      </h1>
+      <p class="text-lg sm:text-xl text-amber-50 max-w-3xl leading-relaxed font-medium">
+        用一顆顆繽紛跳棋串起世代溫度！在歡笑對弈中活化腦力、覺察情緒、輕鬆玩轉數位科技，打造屬於彰化人的青銀共學新樂園。
+      </p>
+
+      <!-- 六色跳棋子視覺裝飾條 -->
+      <div class="mt-8 flex items-center gap-3">
+        <div class="flex items-center gap-2 bg-white/15 backdrop-blur-xs px-4 py-2 rounded-2xl border border-white/25">
+          <span class="w-5 h-5 rounded-full bg-checker-red ring-2 ring-white shadow-sm" title="熱情紅"></span>
+          <span class="w-5 h-5 rounded-full bg-checker-orange ring-2 ring-white shadow-sm" title="活力橘"></span>
+          <span class="w-5 h-5 rounded-full bg-checker-yellow ring-2 ring-white shadow-sm" title="溫暖黃"></span>
+          <span class="w-5 h-5 rounded-full bg-checker-green ring-2 ring-white shadow-sm" title="成長綠"></span>
+          <span class="w-5 h-5 rounded-full bg-checker-blue ring-2 ring-white shadow-sm" title="智慧藍"></span>
+          <span class="w-5 h-5 rounded-full bg-checker-purple ring-2 ring-white shadow-sm" title="創意紫"></span>
+          <span class="ml-2 text-xs sm:text-sm font-bold text-white tracking-wider">六色跳棋・六大核心素養</span>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- 主要內容容器 -->
+  <main class="max-w-6xl mx-auto px-4 sm:px-6 py-10 sm:py-12 space-y-12">
+
+    <!-- 區塊一：核心課程資訊卡片區 (6張特色卡片) -->
+    <section aria-labelledby="core-info-heading">
+      <div class="flex items-center gap-3 mb-6">
+        <span class="w-2.5 h-8 rounded-full bg-gradient-to-b from-orange-500 to-rose-500"></span>
+        <h2 id="core-info-heading" class="text-2xl sm:text-3xl font-extrabold text-slate-900">
+          課程核心規劃總覽
+        </h2>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        
+        <!-- 卡片 1：課程理念 (紅) -->
+        <article class="print-break-inside bg-white rounded-2xl p-6 shadow-md border-t-8 border-checker-red hover:shadow-xl transition-shadow flex flex-col justify-between">
+          <div>
+            <div class="flex items-center gap-3 mb-4">
+              <div class="w-12 h-12 rounded-2xl bg-red-50 text-checker-red flex items-center justify-center text-2xl shrink-0">
+                ❤️
+              </div>
+              <div>
+                <span class="text-xs font-bold uppercase tracking-wider text-red-600">Core Philosophy</span>
+                <h3 class="text-xl font-extrabold text-slate-900">課程理念</h3>
+              </div>
+            </div>
+            <p class="text-slate-700 leading-relaxed text-base">
+              以經典跳棋為橋樑，融合社會情緒學習與數位素養，讓20至80歲學員在歡笑對弈中活化腦力、抒發情緒，開啟跨世代溫馨交流。
+            </p>
+          </div>
+          <div class="mt-5 pt-3 border-t border-slate-100 flex items-center gap-2 text-xs font-bold text-red-600">
+            <span>● 腦力活化</span>
+            <span>● 情緒抒發</span>
+            <span>● 跨代共融</span>
+          </div>
+        </article>
+
+        <!-- 卡片 2：課程目標 (橘) -->
+        <article class="print-break-inside bg-white rounded-2xl p-6 shadow-md border-t-8 border-checker-orange hover:shadow-xl transition-shadow flex flex-col justify-between">
+          <div>
+            <div class="flex items-center gap-3 mb-4">
+              <div class="w-12 h-12 rounded-2xl bg-orange-50 text-checker-orange flex items-center justify-center text-2xl shrink-0">
+                🎯
+              </div>
+              <div>
+                <span class="text-xs font-bold uppercase tracking-wider text-orange-600">Learning Objectives</span>
+                <h3 class="text-xl font-extrabold text-slate-900">課程目標</h3>
+              </div>
+            </div>
+            <p class="text-slate-700 leading-relaxed text-base">
+              有鑑於數位時代人際疏離與跨齡溝通需求，本課程透過跳棋規則、賽局策略與情緒覺察理論，培養邏輯推理、數位平台操作及情緒調節技能；期許學員建立尊重包容、勝不驕敗不餒的品德，進而將棋藝帶入家庭與社區，打造青銀共融的樂活彰化。
+            </p>
+          </div>
+          <div class="mt-5 pt-3 border-t border-slate-100 flex items-center gap-2 text-xs font-bold text-orange-600">
+            <span>● 知識策略</span>
+            <span>● 數位技能</span>
+            <span>● 社區連結</span>
+          </div>
+        </article>
+
+        <!-- 卡片 3：條件限制 (黃) -->
+        <article class="print-break-inside bg-white rounded-2xl p-6 shadow-md border-t-8 border-checker-yellow hover:shadow-xl transition-shadow flex flex-col justify-between">
+          <div>
+            <div class="flex items-center gap-3 mb-4">
+              <div class="w-12 h-12 rounded-2xl bg-amber-50 text-amber-600 flex items-center justify-center text-2xl shrink-0">
+                🤝
+              </div>
+              <div>
+                <span class="text-xs font-bold uppercase tracking-wider text-amber-600">Prerequisites</span>
+                <h3 class="text-xl font-extrabold text-slate-900">條件限制</h3>
+              </div>
+            </div>
+            <p class="text-slate-700 leading-relaxed text-base">
+              本課程為初階入門，歡迎年滿20至80歲、對益智遊戲或跨齡交友有興趣者參加，無須任何跳棋或數位基礎。僅需自備智慧型手機（能連網即可），並保持一顆開放、樂於互動與分享的心，即可輕鬆融入這場充滿樂趣的學習旅程。
+            </p>
+          </div>
+          <div class="mt-5 pt-3 border-t border-slate-100 flex items-center gap-2 text-xs font-bold text-amber-700">
+            <span>● 零基礎友善</span>
+            <span>● 需自備連網手機</span>
+          </div>
+        </article>
+
+        <!-- 卡片 4：授課方式 (綠) -->
+        <article class="print-break-inside bg-white rounded-2xl p-6 shadow-md border-t-8 border-checker-green hover:shadow-xl transition-shadow flex flex-col justify-between">
+          <div>
+            <div class="flex items-center gap-3 mb-4">
+              <div class="w-12 h-12 rounded-2xl bg-emerald-50 text-checker-green flex items-center justify-center text-2xl shrink-0">
+                🎲
+              </div>
+              <div>
+                <span class="text-xs font-bold uppercase tracking-wider text-emerald-600">Teaching Methods</span>
+                <h3 class="text-xl font-extrabold text-slate-900">授課方式</h3>
+              </div>
+            </div>
+            <p class="text-slate-700 leading-relaxed text-base">
+              團體互動及小組活動、主題探討或簡報介紹、講師示範與實際操作、個別指導與反覆練習、學員競賽及獎勵表揚、案例討論與心得分享。透過多元活潑的帶領，讓不同世代學員在輕鬆無壓力的氛圍中快樂學習。
+            </p>
+          </div>
+          <div class="mt-5 pt-3 border-t border-slate-100 flex items-center gap-2 text-xs font-bold text-emerald-600">
+            <span>● 實作演練</span>
+            <span>● 小組共學</span>
+            <span>● 趣味競賽</span>
+          </div>
+        </article>
+
+        <!-- 卡片 5：發展計畫 (藍) -->
+        <article class="print-break-inside bg-white rounded-2xl p-6 shadow-md border-t-8 border-checker-blue hover:shadow-xl transition-shadow flex flex-col justify-between">
+          <div>
+            <div class="flex items-center gap-3 mb-4">
+              <div class="w-12 h-12 rounded-2xl bg-blue-50 text-checker-blue flex items-center justify-center text-2xl shrink-0">
+                🚀
+              </div>
+              <div>
+                <span class="text-xs font-bold uppercase tracking-wider text-blue-600">Future Roadmap</span>
+                <h3 class="text-xl font-extrabold text-slate-900">發展計畫</h3>
+              </div>
+            </div>
+            <p class="text-slate-700 leading-relaxed text-base">
+              未來可開設進階策略組並培訓社區跳棋種子教師，結合數位線上對弈平台，深入彰化各社區據點舉辦跨世代公益友誼賽。
+            </p>
+          </div>
+          <div class="mt-5 pt-3 border-t border-slate-100 flex items-center gap-2 text-xs font-bold text-blue-600">
+            <span>● 種子師資培訓</span>
+            <span>● 彰化社區巡迴賽</span>
+          </div>
+        </article>
+
+        <!-- 卡片 6：教學設計範例 (紫) -->
+        <article class="print-break-inside bg-white rounded-2xl p-6 shadow-md border-t-8 border-checker-purple hover:shadow-xl transition-shadow flex flex-col justify-between">
+          <div>
+            <div class="flex items-center gap-3 mb-4">
+              <div class="w-12 h-12 rounded-2xl bg-purple-50 text-checker-purple flex items-center justify-center text-2xl shrink-0">
+                💡
+              </div>
+              <div>
+                <span class="text-xs font-bold uppercase tracking-wider text-purple-600">Lesson Design Sample</span>
+                <h3 class="text-xl font-extrabold text-slate-900">教學設計（第6週）</h3>
+              </div>
+            </div>
+            <p class="text-slate-700 leading-relaxed text-base">
+              以第6週「心情溫度計與跳躍藝術」為例：先用手機表情貼圖分享當日心情（15分），再分組進行合作式跳棋解題（60分），最後輪流回饋協作感受（25分）。
+            </p>
+          </div>
+          <div class="mt-5 pt-3 border-t border-slate-100 flex items-center gap-2 text-xs font-bold text-purple-600">
+            <span>● 15分暖身覺察</span>
+            <span>● 60分合作解題</span>
+            <span>● 25分回饋</span>
+          </div>
+        </article>
+
+      </div>
+    </section>
+
+    <!-- 區塊二：18週課程大綱區 -->
+    <section aria-labelledby="syllabus-heading" class="bg-white rounded-3xl shadow-lg border border-amber-200/80 overflow-hidden">
+      
+      <!-- 區塊標頭與互動篩選控制列 -->
+      <div class="p-6 sm:p-8 bg-gradient-to-r from-amber-50 via-orange-50/70 to-amber-50 border-b border-amber-200">
+        <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
+          <div>
+            <div class="flex items-center gap-2.5 mb-1">
+              <span class="text-2xl">📅</span>
+              <h2 id="syllabus-heading" class="text-2xl sm:text-3xl font-extrabold text-slate-900">
+                18週完整課程大綱
+              </h2>
+            </div>
+            <p class="text-slate-600 text-sm sm:text-base">
+              循序漸進融合跳棋技巧、社會情緒學習（SEL）與資訊素養，點擊下方標籤可快速篩選主題。
+            </p>
+          </div>
+
+          <!-- 搜尋框 (列印時隱藏) -->
+          <div class="no-print relative w-full lg:w-72">
+            <input type="text" id="searchInput" placeholder="搜尋週次關鍵字（如：詐騙、APP）..."
+              class="w-full pl-10 pr-4 py-2.5 rounded-xl bg-white border border-amber-300 text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-orange-400 text-sm shadow-xs" />
+            <svg class="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+            </svg>
+          </div>
+        </div>
+
+        <!-- 篩選按鈕列 (列印時隱藏) -->
+        <div class="no-print mt-5 flex flex-wrap items-center gap-2" role="tablist" aria-label="課程主題篩選">
+          <button type="button" data-filter="all"
+            class="filter-btn active px-4 py-2 rounded-xl font-bold text-sm transition-all cursor-pointer bg-slate-800 text-white shadow-xs">
+            全部週次 (18)
+          </button>
+          <button type="button" data-filter="sel"
+            class="filter-btn px-4 py-2 rounded-xl font-bold text-sm transition-all cursor-pointer bg-white text-rose-700 border border-rose-200 hover:bg-rose-50">
+            💛 社會情緒學習 (SEL)
+          </button>
+          <button type="button" data-filter="digital"
+            class="filter-btn px-4 py-2 rounded-xl font-bold text-sm transition-all cursor-pointer bg-white text-blue-700 border border-blue-200 hover:bg-blue-50">
+            📱 資訊素養與數位應用
+          </button>
+          <button type="button" data-filter="practice"
+            class="filter-btn px-4 py-2 rounded-xl font-bold text-sm transition-all cursor-pointer bg-white text-emerald-700 border border-emerald-200 hover:bg-emerald-50">
+            🏆 實戰競賽與成果展
+          </button>
+        </div>
+      </div>
+
+      <!-- 響應式課程大綱列表 / 表格 -->
+      <div class="overflow-x-auto">
+        <table class="w-full text-left border-collapse">
+          <thead>
+            <tr class="bg-slate-800 text-white text-sm sm:text-base">
+              <th class="py-4 px-4 sm:px-6 font-bold w-28 sm:w-32 whitespace-nowrap">週次</th>
+              <th class="py-4 px-4 sm:px-6 font-bold w-1/3">課程主題</th>
+              <th class="py-4 px-4 sm:px-6 font-bold">課程內容與亮點</th>
+            </tr>
+          </thead>
+          <tbody id="syllabusBody" class="divide-y divide-amber-100 text-slate-800">
+            <!-- 由 JavaScript 動態渲染 1-18 週資料，確保篩選與搜尋流暢 -->
+          </tbody>
+        </table>
+      </div>
+
+      <!-- 查無資料提示 -->
+      <div id="emptyState" class="hidden py-12 px-6 text-center">
+        <p class="text-lg font-bold text-slate-600 mb-2">找不到符合關鍵字的週次喔！</p>
+        <button id="resetFilterBtn" type="button" class="px-4 py-2 rounded-xl bg-amber-500 text-white font-bold text-sm hover:bg-amber-600 cursor-pointer">
+          顯示全部 18 週課程
+        </button>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- 頁尾 Footer -->
+  <footer class="bg-slate-900 text-slate-300 py-8 mt-12 border-t-4 border-orange-500">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 flex flex-col sm:flex-row items-center justify-between gap-4 text-sm">
+      <div class="flex items-center gap-2">
+        <span class="text-xl">♟️</span>
+        <span class="font-bold text-white">彰化社區大學｜棋樂融融：跨齡跳棋心智派對</span>
+      </div>
+      <p class="text-slate-400 text-center sm:text-right">
+        青銀共融・情緒覺察・數位樂活 ｜ 專為 20 至 80 歲學員設計
+      </p>
+    </div>
+  </footer>
+
+  <!-- 互動腳本 -->
+  <script>
+    // 完整 18 週課程大綱資料（一字不漏保留原始規劃文字，並加上分類標籤供篩選）
+    const syllabusData = [
+      {
+        week: "第1週",
+        title: "相見歡：破冰與跳棋初體驗",
+        content: "透過趣味「心情九宮格」認識20至80歲跨齡夥伴；介紹跳棋歷史與基本規則，並引導學員使用手機掃描QR Code加入課程LINE群組，建立友善共學圈。",
+        tags: ["sel", "digital"],
+        badges: [{ text: "情緒破冰", color: "rose" }, { text: "數位社群", color: "blue" }],
+        special: "normal"
+      },
+      {
+        week: "第2週",
+        title: "專注當下：單步與連續跳躍",
+        content: "學習基本走法與連續跳躍技巧。融入社會情緒學習（SEL）的「自我覺察」，練習在思考路徑時保持呼吸平穩，體驗靜心對弈的樂趣。",
+        tags: ["sel"],
+        badges: [{ text: "自我覺察", color: "rose" }],
+        special: "normal"
+      },
+      {
+        week: "第3週",
+        title: "數位神隊友：手機跳棋APP入門",
+        content: "資訊素養實作！手把手教學下載並操作免費跳棋APP，認識介面功能與護眼設定，讓長輩與年輕人都能隨時隨地輕鬆線上練習與複習。",
+        tags: ["digital"],
+        badges: [{ text: "資訊素養", color: "blue" }],
+        special: "normal"
+      },
+      {
+        week: "第4週",
+        title: "搭橋藝術：互助合作的雙人跳棋",
+        content: "打破單打獨鬥！設計「搭橋共贏」合作賽制，學員需為隊友鋪路才能推進。藉此體會人際支持與同理心，學習在團隊中溝通與妥協。",
+        tags: ["sel"],
+        badges: [{ text: "同理合作", color: "rose" }],
+        special: "normal"
+      },
+      {
+        week: "第5週",
+        title: "網路安全盾：棋局中的資訊識讀",
+        content: "結合資訊素養，探討網路遊戲與社群常見的詐騙陷阱與假訊息。透過跳棋「看清全盤局勢」的思維，培養學員在數位世界中的辨識與防詐能力。",
+        tags: ["digital"],
+        badges: [{ text: "防詐識讀", color: "blue" }],
+        special: "normal"
+      },
+      {
+        week: "第6週",
+        title: "心情溫度計與跳躍藝術",
+        content: "運用手機數位工具表達當日情緒狀態，學習辨識對弈時的緊張或急躁感；透過小組接力賽，練習在時間壓力下保持冷靜與正向鼓勵。",
+        tags: ["sel", "digital"],
+        badges: [{ text: "情緒調節", color: "rose" }, { text: "數位表達", color: "blue" }],
+        special: "normal"
+      },
+      {
+        week: "第7週",
+        title: "佈局智慧：中盤攻防與大局觀",
+        content: "深入解析中盤卡位與破局策略。引導學員從「只看眼前一步」提升至「全盤規劃」，並連結生活中的問題解決能力，培養沉著應變的態度。",
+        tags: ["sel"],
+        badges: [{ text: "策略思維", color: "amber" }],
+        special: "normal"
+      },
+      {
+        week: "第8週",
+        title: "跨齡對話：棋盤上的生命故事",
+        content: "舉辦「青銀交流茶會」，在輕鬆對弈中分享不同世代的童年遊戲與人生經驗。練習積極傾聽與正向回饋，消弭年齡隔閡，增進彼此理解。",
+        tags: ["sel"],
+        badges: [{ text: "青銀共融", color: "rose" }],
+        special: "normal"
+      },
+      {
+        week: "第9週",
+        title: "公民素養週",
+        content: "由彰化社區大學安排",
+        tags: [],
+        badges: [{ text: "全校共同週", color: "indigo" }],
+        special: "civic"
+      },
+      {
+        week: "第10週",
+        title: "線上對決：跨時空雲端友誼賽",
+        content: "運用第3週所學的數位平台，進行分組線上對戰練習。學習數位禮儀與線上溝通技巧，體驗科技如何打破空間限制，拉近人與人的距離。",
+        tags: ["digital", "practice"],
+        badges: [{ text: "數位禮儀", color: "blue" }, { text: "線上對戰", color: "emerald" }],
+        special: "normal"
+      },
+      {
+        week: "第11週",
+        title: "逆轉勝心法：挫折容忍與情緒調節",
+        content: "模擬落後局面進行「殘局救援」挑戰！當棋路被封鎖時，練習轉換視角與情緒轉念，培養「勝不驕、敗不餒」的心理韌性。",
+        tags: ["sel"],
+        badges: [{ text: "心理韌性", color: "rose" }],
+        special: "normal"
+      },
+      {
+        week: "第12週",
+        title: "創意變變變：自製專屬跳棋盤",
+        content: "結合美學與環保，利用回收材料或數位繪圖軟體設計個人風格跳棋盤與棋子，激發創造力，並透過手機拍照上傳群組互相欣賞點讚。",
+        tags: ["digital"],
+        badges: [{ text: "環保美學", color: "emerald" }, { text: "數位分享", color: "blue" }],
+        special: "normal"
+      },
+      {
+        week: "第13週",
+        title: "團隊智囊團：三人混戰與策略聯盟",
+        content: "挑戰進階三人對戰模式，體驗局勢瞬息萬變的刺激感。在競爭與合作間學習負責任的決策，並覺察人際互動中的界線與尊重。",
+        tags: ["sel", "practice"],
+        badges: [{ text: "人際界線", color: "rose" }, { text: "進階對戰", color: "emerald" }],
+        special: "normal"
+      },
+      {
+        week: "第14週",
+        title: "數位小主播：我的跳棋妙招分享",
+        content: "資訊素養進階應用！指導學員使用手機錄製1分鐘短影音，分享自己最得意的跳棋技巧或上課心得，學習基礎剪輯與安全分享數位內容。",
+        tags: ["digital"],
+        badges: [{ text: "短影音創作", color: "blue" }],
+        special: "normal"
+      },
+      {
+        week: "第15週",
+        title: "棋逢敵手：班內積分循環賽（上）",
+        content: "舉辦班內友誼積分賽，採跨齡混搭分組。強調「友誼第一、比賽第二」，賽後需給予對手一句真誠的讚美，實踐正向人際互動。",
+        tags: ["sel", "practice"],
+        badges: [{ text: "班內積分賽", color: "emerald" }, { text: "正向讚美", color: "rose" }],
+        special: "normal"
+      },
+      {
+        week: "第16週",
+        title: "棋逢敵手：班內積分循環賽（下）",
+        content: "延續積分賽並進行趣味頒獎（如最佳風度獎、神機妙算獎、最佳拍檔獎）。透過回顧賽程，引導學員肯定自我成長與團隊貢獻。",
+        tags: ["sel", "practice"],
+        badges: [{ text: "班內積分賽", color: "emerald" }, { text: "自我肯定", color: "rose" }],
+        special: "normal"
+      },
+      {
+        week: "第17週",
+        title: "成果展籌備：共創我們的棋跡",
+        content: "全體學員共同討論期末成果展呈現方式，分工整理學習歷程照片、短影音及手作棋盤，凝聚班級向心力，為展演做好萬全準備。",
+        tags: ["practice"],
+        badges: [{ text: "團隊籌備", color: "amber" }],
+        special: "normal"
+      },
+      {
+        week: "第18週",
+        title: "「棋樂融融」跨世代跳棋嘉年華成果展",
+        content: "邀請親友與社區民眾共襄盛舉！展示手作棋盤與學習影片，並設立「跨齡跳棋擂台區」與「情緒小語牆」，讓學員化身關主，展現自信與學習豐碩成果。",
+        tags: ["sel", "digital", "practice"],
+        badges: [{ text: "期末成果展", color: "orange" }, { text: "社區共融", color: "rose" }],
+        special: "showcase"
+      }
+    ];
+
+    // 標籤色彩對照表
+    const badgeColorMap = {
+      rose: "bg-rose-100 text-rose-800 border-rose-200",
+      blue: "bg-blue-100 text-blue-800 border-blue-200",
+      emerald: "bg-emerald-100 text-emerald-800 border-emerald-200",
+      amber: "bg-amber-100 text-amber-800 border-amber-200",
+      indigo: "bg-indigo-100 text-indigo-800 border-indigo-200",
+      orange: "bg-orange-600 text-white border-orange-700"
+    };
+
+    // 六色跳棋子循環裝飾
+    const dotColors = [
+      "bg-checker-red",
+      "bg-checker-orange",
+      "bg-checker-yellow",
+      "bg-checker-green",
+      "bg-checker-blue",
+      "bg-checker-purple"
+    ];
+
+    const syllabusBody = document.getElementById("syllabusBody");
+    const emptyState = document.getElementById("emptyState");
+    const searchInput = document.getElementById("searchInput");
+    const filterBtns = document.querySelectorAll(".filter-btn");
+    const resetFilterBtn = document.getElementById("resetFilterBtn");
+
+    let currentFilter = "all";
+    let currentQuery = "";
+
+    // 渲染表格函數
+    function renderTable() {
+      const filtered = syllabusData.filter((item) => {
+        const matchesFilter = currentFilter === "all" || item.tags.includes(currentFilter);
+        const query = currentQuery.trim().toLowerCase();
+        const matchesQuery =
+          !query ||
+          item.week.toLowerCase().includes(query) ||
+          item.title.toLowerCase().includes(query) ||
+          item.content.toLowerCase().includes(query);
+        return matchesFilter && matchesQuery;
+      });
+
+      syllabusBody.innerHTML = "";
+
+      if (filtered.length === 0) {
+        emptyState.classList.remove("hidden");
+        return;
+      } else {
+        emptyState.classList.add("hidden");
+      }
+
+      filtered.forEach((item, index) => {
+        const tr = document.createElement("tr");
+        tr.className = "print-break-inside transition-colors ";
+
+        // 針對第9週（公民素養週）與第18週（成果展）套用特別醒目的視覺樣式
+        if (item.special === "civic") {
+          tr.className += "bg-indigo-50/90 hover:bg-indigo-100/80 border-y-2 border-indigo-200";
+        } else if (item.special === "showcase") {
+          tr.className += "bg-gradient-to-r from-amber-100/90 via-orange-100/90 to-rose-100/90 hover:from-amber-100 hover:to-rose-100 border-t-2 border-orange-300";
+        } else {
+          tr.className += "hover:bg-amber-50/60";
+        }
+
+        const dotClass = dotColors[index % dotColors.length];
+
+        // 產生徽章 HTML
+        const badgesHtml = item.badges
+          .map(
+            (b) =>
+              `<span class="inline-block px-2.5 py-0.5 rounded-md text-xs font-bold border ${
+                badgeColorMap[b.color] || badgeColorMap.amber
+              }">${b.text}</span>`
+          )
+          .join(" ");
+
+        // 第9週與第18週特別圖示
+        let weekBadgeHtml = `
+          <div class="inline-flex items-center gap-2 font-extrabold text-slate-900 text-base">
+            <span class="w-3 h-3 rounded-full ${dotClass} shrink-0"></span>
+            <span>${item.week}</span>
+          </div>
+        `;
+
+        if (item.special === "civic") {
+          weekBadgeHtml = `
+            <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-xl bg-indigo-600 text-white font-extrabold text-sm shadow-xs">
+              <span>🏛️</span>
+              <span>${item.week}</span>
+            </div>
+          `;
+        } else if (item.special === "showcase") {
+          weekBadgeHtml = `
+            <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-xl bg-gradient-to-r from-orange-600 to-rose-600 text-white font-extrabold text-sm shadow-xs">
+              <span>🎉</span>
+              <span>${item.week}</span>
+            </div>
+          `;
+        }
+
+        tr.innerHTML = `
+          <td class="py-4 px-4 sm:px-6 align-top whitespace-nowrap">
+            ${weekBadgeHtml}
+          </td>
+          <td class="py-4 px-4 sm:px-6 align-top">
+            <div class="font-extrabold text-base sm:text-lg ${
+              item.special === "civic"
+                ? "text-indigo-950"
+                : item.special === "showcase"
+                ? "text-rose-950"
+                : "text-slate-900"
+            } mb-1.5">
+              ${item.title}
+            </div>
+            <div class="flex flex-wrap gap-1.5">
+              ${badgesHtml}
+            </div>
+          </td>
+          <td class="py-4 px-4 sm:px-6 align-top text-base leading-relaxed ${
+            item.special === "civic"
+              ? "font-bold text-indigo-800"
+              : item.special === "showcase"
+              ? "font-medium text-slate-900"
+              : "text-slate-700"
+          }">
+            ${item.content}
+          </td>
+        `;
+
+        syllabusBody.appendChild(tr);
+      });
+    }
+
+    // 篩選按鈕點擊事件
+    filterBtns.forEach((btn) => {
+      btn.addEventListener("click", () => {
+        filterBtns.forEach((b) => {
+          b.classList.remove("active", "bg-slate-800", "text-white");
+          b.classList.add("bg-white");
+        });
+        btn.classList.add("active", "bg-slate-800", "text-white");
+        btn.classList.remove("bg-white");
+
+        currentFilter = btn.getAttribute("data-filter");
+        renderTable();
+      });
+    });
+
+    // 搜尋輸入事件
+    searchInput.addEventListener("input", (e) => {
+      currentQuery = e.target.value;
+      renderTable();
+    });
+
+    // 重置篩選按鈕
+    resetFilterBtn.addEventListener("click", () => {
+      currentFilter = "all";
+      currentQuery = "";
+      searchInput.value = "";
+      filterBtns[0].click();
+    });
+
+    // 字體大小切換（標準 / 放大）
+    const fontToggleBtn = document.getElementById("fontToggleBtn");
+    const fontToggleLabel = document.getElementById("fontToggleLabel");
+    let isLargeFont = false;
+
+    fontToggleBtn.addEventListener("click", () => {
+      isLargeFont = !isLargeFont;
+      document.documentElement.classList.toggle("font-large", isLargeFont);
+      if (isLargeFont) {
+        fontToggleLabel.textContent = "字體：放大護眼模式（點此恢復）";
+        fontToggleBtn.classList.replace("bg-amber-100", "bg-orange-500");
+        fontToggleBtn.classList.replace("text-amber-950", "text-white");
+      } else {
+        fontToggleLabel.textContent = "字體：標準（點此放大）";
+        fontToggleBtn.classList.replace("bg-orange-500", "bg-amber-100");
+        fontToggleBtn.classList.replace("text-white", "text-amber-950");
+      }
+    });
+
+    // 列印 / 匯出 PDF 按鈕
+    document.getElementById("printBtn").addEventListener("click", () => {
+      window.print();
+    });
+
+    // 初始渲染
+    renderTable();
+  </script>
+</body>
+</html>
